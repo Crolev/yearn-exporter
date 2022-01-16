@@ -103,6 +103,8 @@ def get_price_eth(token, block=None):
         token = "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9"  # stkAAVE -> AAVE
     elif token == "0x27D22A7648e955E510a40bDb058333E9190d12D4":
         token = "0x0cec1a9154ff802e7934fc916ed7ca50bde6844e"  # PPOOL -> POOL
+        
+    if token == '0xc5bDdf9843308380375a611c18B50Fb9341f502A' and block and block < 11786563: return 0 # no liquid market for yveCRV-DAO
 
     if token in aave:
         token = aave.atoken_underlying(token)
