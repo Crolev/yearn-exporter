@@ -71,6 +71,7 @@ def get_token_from_event(event):
         # some tokens have unverified sources with etherscan, skip them!
         return None
     except EventLookupError:
+        logger.critical(event)
         logger.critical(
             f'One of your cached contracts has an incorrect definition: {event.address}. Please fix this manually'
         )
