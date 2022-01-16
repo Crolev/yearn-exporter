@@ -61,8 +61,12 @@ def get_price_arbi(token, block=None):
 
 def get_price_ftm(token, block=None):
     price = None
+    
+    if yearn_lens.is_yearn_vault(token):
+        price = yearn_lens.get_price(token, block=block)
+        logger.debug("yearn -> %s", price)
 
-    if token in compound:
+    elif token in compound:
         price = compound.get_price(token, block=block)
         logger.debug("compound -> %s", price)
 
