@@ -58,3 +58,6 @@ test:
 
 all:
 	$(all_command) down && $(all_command) build --no-cache && $(all_command) up $(flags)
+
+postgres:
+	$(dashboards_command) up -d --build postgres
