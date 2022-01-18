@@ -37,6 +37,7 @@ class Address(db.Entity):
     nickname = Optional(str)
 
     token = Optional('Token')
+    partners_tx = Set('PartnerHarvestEvent', reverse='wrapper')
 
 
 class Token(db.Entity):
@@ -70,12 +71,36 @@ class UserTx(db.Entity):
     PrimaryKey(hash,log_index)
 
 
+class PartnerHarvestEvent(db.Entity):
+    _table_ = 'partners_txs'
+    
+    block = Required(int)
+    timestamp = Required(int)
+    balance = Required(Decimal,38,18)
+    total_supply = Required(Decimal,38,18)
+    vault_price = Required(Decimal,38,18)
+    balance_usd = Required(Decimal,38,18)
+    share = Required(Decimal,38,18)
+    payout_base = Required(Decimal,38,18)
+    protocol_fee = Required(Decimal,38,18)
+    wrapper = Required(Address,columns=["chainid","wrapper"],reverse='partners_tx')
+    vault = Required(str)
+
+    
+if os.environ.get("IS_CONTAINER",False):
+    # when running in docker, can use container name
+    host = os.environ.get("PGHOST", "postgres")
+else:
+    # when not running in docker, must use localhost
+    host = os.environ.get('PGHOST',"127.0.0.1")
+    
+
 db.bind(
     provider="postgres",
     user=os.environ.get("PGUSER", "postgres"),
-    host=os.environ.get("PGHOST", "postgres"),
+    host=host,
     password=os.environ.get("PGPASS", "yearn-exporter"),
     database="postgres",
 )
-
+    
 db.generate_mapping(create_tables=True)
