@@ -85,21 +85,13 @@ class PartnerHarvestEvent(db.Entity):
     protocol_fee = Required(Decimal,38,18)
     wrapper = Required(Address,columns=["chainid","wrapper"],reverse='partners_tx')
     vault = Required(str)
-
-    
-if os.environ.get("IS_CONTAINER",False):
-    # when running in docker, can use container name
-    host = os.environ.get("PGHOST", "postgres")
-else:
-    # when not running in docker, must use localhost
-    host = os.environ.get('PGHOST',"127.0.0.1")
     
 
 db.bind(
     provider="postgres",
-    user=os.environ.get("PGUSER", "postgres"),
-    host=host,
-    password=os.environ.get("PGPASS", "yearn-exporter"),
+    user=os.environ.get("POSTGRES_USER", "postgres"),
+    host=os.environ.get('POSTGRES_HOST',"127.0.0.1"),
+    password=os.environ.get("POSTGRES_PASS", "yearn-exporter"),
     database="postgres",
 )
     
